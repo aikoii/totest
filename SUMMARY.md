@@ -1,3 +1,3 @@
 # Table of contents
 
-* [Sep 4 tables](README.md)
+* [Page](README.md)
