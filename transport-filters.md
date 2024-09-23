@@ -2,6 +2,8 @@
 
 AMPS provides the ability for incoming commands to be modified, or _filtered_.
 
+Making changes
+
 When one or more transport filters are specified, AMPS provides each incoming command to those filters as soon as the header for the message is parsed. Each filter can modify the message data or a subset of the headers, and can choose to have AMPS stop processing the command (or can request that AMPS disconnect the connection that submitted the command).
 
 The filters for a `Transport`, if any, are defined in the configuration for the transport. When more than one filter is specified, AMPS runs each filter in the order in which they appear in the configuration file.
