@@ -12,51 +12,10 @@ Transport filters are implemented as extension modules. To create an extension m
 
 AMPS loads the following transport filters by default:
 
-| Module                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Module                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `amps-topic-translator`           | <p>Translates topic names on incoming commands.</p><p>This module requires one or more of the following options: <code>Topic</code></p><p>Specifies the translation to use. This option takes the following format:<br><em>original</em> <code>:</code> <em>translated</em></p><p>The <em>original</em> parameter can be a literal topic name or a PCRE regex. Any topic on any command that matches that parameter will be converted to the translated topic.</p><p>For example, to convert the topic <code>legacy</code> to the topic <code>new</code>, you would specify the following option:</p><pre><code> &#x3C;Options> &#x3C;Topic>legacy:new&#x3C;/Topic> &#x3C;/Options> 
-</code></pre><p>To translate any topic beginning with <code>/orders/northamerica</code> to <code>NAorders</code>, you would specify the following option:</p><pre><code>
- &#x3C;Options> 
- 
- &#x3C;Topic>^/orders/northamerica:NAorders&#x3C;/Topic> 
- 
- &#x3C;/Options> 
-
-public DefaultServerChooser add(String uri)
-    {
-        if (_currentFree >= _uris.length)
-        {
-            String[] newUris = new String[_uris.length * 2];
-            System.arraycopy(_uris, 0, newUris, 0, _uris.length);
-            _uris = newUris;
-        }
-
-        _uris[_currentFree] = uri;
-        ++_currentFree;
-        return this;
-    }
-    
-    ```Java
-public &#x3C;T extends Collection&#x3C;String> > DefaultServerChooser addAll(T uris)
-    {
-        int urisSize = uris.size();
-        if (_currentFree >= _uris.length - urisSize)
-        {
-            int newLength = (_uris.length&#x3C;urisSize)?_uris.length+urisSize:_uris.length*2;
-            String[] newUris = new String[newLength];
-            System.arraycopy(_uris, 0, newUris, 0, _uris.length);
-            _uris = newUris;
-        }
-
-        for (String uri : uris)
-        {
-            _uris[_currentFree] = uri;
-            ++_currentFree;
-        }
-        return this;
-    }
-    ```
-    
+</code></pre><p>To translate any topic beginning with <code>/orders/northamerica</code> to <code>NAorders</code>, you would specify the following option:</p><pre><code> 
     ``` Java
     public String getCurrentURI()
     {
@@ -71,8 +30,7 @@ public &#x3C;T extends Collection&#x3C;String> > DefaultServerChooser addAll(T u
         return _uris[_current];
     }
     ```
-    
-    ```Java
+</code></pre><pre><code>```Java
 <strong>public int getConnectWaitDuration(String uri_) throws Exception
 </strong>    {
         _throwIfMaximumExceeded();
@@ -93,7 +51,48 @@ public &#x3C;T extends Collection&#x3C;String> > DefaultServerChooser addAll(T u
         return _currentDurationAndIncrease();
     }
     ```
+</code></pre><pre><code>```Java
+public &#x3C;T extends Collection&#x3C;String> > DefaultServerChooser addAll(T uris)
+    {
+        int urisSize = uris.size();
+        if (_currentFree >= _uris.length - urisSize)
+        {
+            int newLength = (_uris.length&#x3C;urisSize)?_uris.length+urisSize:_uris.length*2;
+            String[] newUris = new String[newLength];
+            System.arraycopy(_uris, 0, newUris, 0, _uris.length);
+            _uris = newUris;
+        }
+
+        for (String uri : uris)
+        {
+            _uris[_currentFree] = uri;
+            ++_currentFree;
+        }
+        return this;
+    }
+    ```
+</code></pre><pre><code>
+ &#x3C;Options> 
+ 
+ &#x3C;Topic>^/orders/northamerica:NAorders&#x3C;/Topic> 
+ 
+ &#x3C;/Options> 
+
+public DefaultServerChooser add(String uri)
+    {
+        if (_currentFree >= _uris.length)
+        {
+            String[] newUris = new String[_uris.length * 2];
+            System.arraycopy(_uris, 0, newUris, 0, _uris.length);
+            _uris = newUris;
+        }
+
+        _uris[_currentFree] = uri;
+        ++_currentFree;
+        return this;
+    }
+    
 </code></pre> |
 | `amps-conflated-topic-translator` | <p>Translates an incoming <code>subscribe</code>, <code>sow_and_subscribe</code>, <code>delta_subscribe</code>, or <code>sow_and_delta_subscribe</code> command for a specific topic name as follows:</p><ul><li>Translates the topic name on the command to a different topic name.</li><li>Adds a conflation interval to the command, if there is no conflation interval specified on the incoming command.</li></ul><p>This module can be useful for removing a conflated topic that is infrequently-used, or for which subscribers only monitor a small number of messages out of the overall topic.</p><p>This module requires one or more of the following options: <code>Topic</code></p><p>Specifies the translation to use. This option takes the following format:<br><em>original</em> <code>:</code> <em>translated</em> <code>:</code> <em>interval</em></p><p>The <em>interval</em> specifies the conflation interval to apply to the translated commands if one is not provided.</p><p>For example, to convert all subscriptions to the topic <code>orders-C</code> to the topic <code>orders</code>, and guarantee that each translated subscription has a conflation specified, with a 500 millisecond default for conflation, you would use the following options:</p><pre><code> &#x3C;Options> &#x3C;Topic>orders-C:orders:500ms&#x3C;/Topic> &#x3C;/Options> 
 </code></pre><p>To convert all subscriptions to the topics <code>slowUpdates</code> and <code>verySlowUpdates</code> to the topic <code>updates</code> and guarantee that each translated subscription has a conflation specified, with a 2 second default for conflation, you would use the following options:</p><pre><code> &#x3C;Options> &#x3C;Topic>slowUpdates:updates:2s&#x3C;/Topic> &#x3C;Topic>verySlowUpdates:updates:2s&#x3C;/Topic> &#x3C;/Options> 
-</code></pre>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+</code></pre>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
